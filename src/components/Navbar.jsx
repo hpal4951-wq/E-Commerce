@@ -1,48 +1,36 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 
 const Navbar = () => {
-  const { isLoggedIn, logout, currentUser, role } = useAuth();
+  const { isLoggedIn, logout, role, currentUser } = useAuth();
   const { totalQuantity } = useCart();
 
   return (
-    <nav style={{ padding: "20px", background: "#333", color: "#fff" }}>
-      <Link to="/products" style={{ marginRight: "10px", color: "#fff" }}>
-        Products
+    <nav className="navbar">
+      <Link to="/products" className="logo">
+        E-Shop
       </Link>
 
-      {isLoggedIn && (
-        <Link to="/cart" style={{ marginRight: "10px", color: "#fff" }}>
-          Cart ({totalQuantity})
-        </Link>
-      )}
+      <div className="nav-links">
+        <NavLink to="/products">Products</NavLink>
 
-      {role === "admin" && (
-        <Link to="/inventory" style={{ marginRight: "10px", color: "#fff" }}>
-          Inventory
-        </Link>
-      )}
+        {isLoggedIn && <NavLink to="/cart">Cart ({totalQuantity})</NavLink>}
 
-      {!isLoggedIn ? (
-        <>
-          <Link to="/login" style={{ marginRight: "10px", color: "#fff" }}>
-            Login
-          </Link>
+        {role === "admin" && <NavLink to="/inventory">Inventory</NavLink>}
 
-          <Link to="/signup" style={{ color: "#fff" }}>
-            Signup
-          </Link>
-        </>
-      ) : (
-        <>
-          <span style={{ marginRight: "10px" }}>
-            {currentUser?.username} ({role})
-          </span>
-
-          <button onClick={logout}>Logout</button>
-        </>
-      )}
+        {!isLoggedIn ? (
+          <>
+            <NavLink to="/login">Login</NavLink>
+            <NavLink to="/signup">Signup</NavLink>
+          </>
+        ) : (
+          <>
+            <span>{currentUser?.username}</span>
+            <button onClick={logout}>Logout</button>
+          </>
+        )}
+      </div>
     </nav>
   );
 };

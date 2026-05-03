@@ -14,10 +14,10 @@ const Login = () => {
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -43,31 +43,28 @@ const Login = () => {
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h2>Login Page</h2>
+    <div className="container">
+      <form className="form" onSubmit={handleSubmit}>
+        <h1>Login</h1>
 
-      {message && <p style={{ color: "red" }}>{message}</p>}
+        {message && <p className="error">{message}</p>}
 
-      <form onSubmit={handleSubmit}>
         <input
-          type="text"
           name="username"
-          placeholder="Enter username"
+          placeholder="Username"
           value={formData.username}
           onChange={handleChange}
         />
-        <br /><br />
 
         <input
-          type="password"
           name="password"
-          placeholder="Enter password"
+          type="password"
+          placeholder="Password"
           value={formData.password}
           onChange={handleChange}
         />
-        <br /><br />
 
-        <button type="submit">Login</button>
+        <button className="btn">Login</button>
       </form>
     </div>
   );

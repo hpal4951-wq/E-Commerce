@@ -1,56 +1,83 @@
+import { useMemo, useState } from "react";
 import { useInventory } from "../context/InventoryContext";
-import { useCart } from "../context/CartContext";
+import useDebounce from "../hooks/useDebounce";
+import ProductCard from "../components/ProductCard";
 
 const Products = () => {
   const { inventory, loading, error, syncInventory } = useInventory();
-  const { addToCart } = useCart();
+
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
+  const [rating, setRating] = useState("all");
+
+  const debouncedSearch = useDebounce(search, 500);
+
+  const categories = useMemo(() => {
+    return ["all", ...new Set(inventory.map((item) => item.category))];
+  }, [inventory]);
+
+  const filteredProducts = useMemo(() => {
+    return inventory.filter((product) => {
+      const searchMatch = product.title
+        .toLowerCase()
+        .includes(debouncedSearch.toLowerCase());
+
+      const categoryMatch =
+        category === "all" || product.category === category;
+
+      const ratingMatch =
+        rating === "all" || product.rating >= Number(rating);
+
+      return searchMatch && categoryMatch && ratingMatch;
+    });
+  }, [inventory, debouncedSearch, category, rating]);
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h2>Products Page</h2>
+    <div className="container">
+      <h1 className="title">Products</h1>
 
-      <button onClick={syncInventory}>Sync Products</button>
+      <div className="controls">
+        <input
+          type="text"
+          placeholder="Search product..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
-      {loading && <p>Loading products...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
 
-      <br />
-      <br />
+        <select value={rating} onChange={(e) => setRating(e.target.value)}>
+          <option value="all">All Ratings</option>
+          <option value="4">4 Stars & above</option>
+          <option value="3">3 Stars & above</option>
+          <option value="2">2 Stars & above</option>
+        </select>
 
-      {inventory.length === 0 && !loading ? (
+        <button className="btn" onClick={syncInventory}>
+          Sync Products
+        </button>
+      </div>
+
+      {error && <p className="error">{error}</p>}
+
+      {loading ? (
+        <div className="grid">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div className="skeleton" key={index}></div>
+          ))}
+        </div>
+      ) : filteredProducts.length === 0 ? (
         <p>No products found. Click Sync Products.</p>
       ) : (
-        <div>
-          {inventory.map((product) => (
-            <div
-              key={product.id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "15px",
-                marginBottom: "15px",
-              }}
-            >
-              <img
-                src={product.image}
-                alt={product.title}
-                width="100"
-                height="100"
-              />
-
-              <h3>{product.title}</h3>
-              <p>Price: ₹ {product.price}</p>
-              <p>Category: {product.category}</p>
-              <p>Rating: ⭐ {product.rating}</p>
-              <p>Stock: {product.count}</p>
-
-              {product.count === 0 ? (
-                <button disabled>Out of Stock</button>
-              ) : (
-                <button onClick={() => addToCart(product)}>
-                  Add to Cart
-                </button>
-              )}
-            </div>
+        <div className="grid">
+          {filteredProducts.map((product) => (
+            <ProductCard product={product} key={product.id} />
           ))}
         </div>
       )}

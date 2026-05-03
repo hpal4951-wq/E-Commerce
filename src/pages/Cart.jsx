@@ -11,51 +11,50 @@ const Cart = () => {
   } = useCart();
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h2>Cart Page</h2>
+    <div className="container">
+      <h1 className="title">Cart</h1>
 
       {cartItems.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
         <>
           {cartItems.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "15px",
-                marginBottom: "15px",
-              }}
-            >
-              <img
-                src={item.image}
-                alt={item.title}
-                width="100"
-                height="100"
-              />
+            <div className="cart-item" key={item.id}>
+              <img src={item.image} alt={item.title} />
 
-              <h3>{item.title}</h3>
-              <p>Price: ₹ {item.price}</p>
-              <p>Quantity: {item.quantity}</p>
+              <div>
+                <h3>{item.title}</h3>
+                <p>Price: ₹ {item.price}</p>
+                <p>Quantity: {item.quantity}</p>
 
-              <button onClick={() => increaseQuantity(item.id)}>+</button>
+                <div className="actions">
+                  <button
+                    className="btn btn-green"
+                    onClick={() => increaseQuantity(item.id)}
+                  >
+                    +
+                  </button>
 
-              <button onClick={() => decreaseQuantity(item.id)}>-</button>
+                  <button
+                    className="btn"
+                    onClick={() => decreaseQuantity(item.id)}
+                  >
+                    -
+                  </button>
 
-              <button onClick={() => removeFromCart(item.id)}>
-                Remove
-              </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => removeFromCart(item.id)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
             </div>
           ))}
 
-          <div
-            style={{
-              border: "2px solid black",
-              padding: "20px",
-              marginTop: "20px",
-            }}
-          >
-            <h3>Cart Summary</h3>
+          <div className="summary">
+            <h2>Cart Summary</h2>
             <p>Total Unique Items: {cartItems.length}</p>
             <p>Total Quantity: {totalQuantity}</p>
             <p>Total Price: ₹ {totalPrice.toFixed(2)}</p>

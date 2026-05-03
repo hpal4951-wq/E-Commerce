@@ -21,10 +21,10 @@ const Inventory = () => {
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -56,17 +56,18 @@ const Inventory = () => {
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h2>Inventory Page - Admin Only</h2>
+    <div className="container">
+      <h1 className="title">Admin Inventory</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form className="form" onSubmit={handleSubmit}>
+        <h2>Add Product</h2>
+
         <input
           name="title"
           placeholder="Product title"
           value={formData.title}
           onChange={handleChange}
         />
-        <br /><br />
 
         <input
           name="price"
@@ -75,7 +76,6 @@ const Inventory = () => {
           value={formData.price}
           onChange={handleChange}
         />
-        <br /><br />
 
         <textarea
           name="description"
@@ -83,7 +83,6 @@ const Inventory = () => {
           value={formData.description}
           onChange={handleChange}
         />
-        <br /><br />
 
         <input
           name="category"
@@ -91,7 +90,6 @@ const Inventory = () => {
           value={formData.category}
           onChange={handleChange}
         />
-        <br /><br />
 
         <input
           name="image"
@@ -99,7 +97,6 @@ const Inventory = () => {
           value={formData.image}
           onChange={handleChange}
         />
-        <br /><br />
 
         <input
           name="rating"
@@ -108,7 +105,6 @@ const Inventory = () => {
           value={formData.rating}
           onChange={handleChange}
         />
-        <br /><br />
 
         <input
           name="count"
@@ -117,52 +113,45 @@ const Inventory = () => {
           value={formData.count}
           onChange={handleChange}
         />
-        <br /><br />
 
-        <button type="submit">Add Product</button>
+        <button className="btn">Add Product</button>
       </form>
 
-      <hr style={{ margin: "30px 0" }} />
+      <br />
 
-      <h3>Inventory List</h3>
+      <h2>Inventory List</h2>
 
-      {inventory.length === 0 ? (
-        <p>No inventory available.</p>
-      ) : (
-        inventory.map((product) => (
-          <div
-            key={product.id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "15px",
-              marginBottom: "15px",
-            }}
-          >
-            <img
-              src={product.image}
-              alt={product.title}
-              width="100"
-              height="100"
-            />
+      <div className="grid">
+        {inventory.map((item) => (
+          <div className="card" key={item.id}>
+            <img src={item.image} alt={item.title} />
 
-            <h3>{product.title}</h3>
-            <p>Price: ₹ {product.price}</p>
-            <p>Stock: {product.count}</p>
+            <h3>{item.title}</h3>
+            <p>₹ {item.price}</p>
+            <p>Stock: {item.count}</p>
 
-            <button onClick={() => increaseStock(product.id)}>
-              Increase Stock
-            </button>
+            <div className="actions">
+              <button
+                className="btn btn-green"
+                onClick={() => increaseStock(item.id)}
+              >
+                Increase
+              </button>
 
-            <button onClick={() => decreaseStock(product.id)}>
-              Decrease Stock
-            </button>
+              <button className="btn" onClick={() => decreaseStock(item.id)}>
+                Decrease
+              </button>
 
-            <button onClick={() => removeProduct(product.id)}>
-              Remove Product
-            </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => removeProduct(item.id)}
+              >
+                Remove
+              </button>
+            </div>
           </div>
-        ))
-      )}
+        ))}
+      </div>
     </div>
   );
 };

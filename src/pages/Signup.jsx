@@ -16,10 +16,10 @@ const Signup = () => {
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -28,7 +28,8 @@ const Signup = () => {
     if (
       !formData.username ||
       !formData.password ||
-      !formData.confirmPassword
+      !formData.confirmPassword ||
+      !formData.role
     ) {
       setMessage("All fields are required");
       return;
@@ -55,46 +56,41 @@ const Signup = () => {
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h2>Signup Page</h2>
+    <div className="container">
+      <form className="form" onSubmit={handleSubmit}>
+        <h1>Signup</h1>
 
-      {message && <p style={{ color: "red" }}>{message}</p>}
+        {message && <p className="error">{message}</p>}
 
-      <form onSubmit={handleSubmit}>
         <input
-          type="text"
           name="username"
-          placeholder="Enter username"
+          placeholder="Username"
           value={formData.username}
           onChange={handleChange}
         />
-        <br /><br />
 
         <input
-          type="password"
           name="password"
-          placeholder="Enter password"
+          type="password"
+          placeholder="Password"
           value={formData.password}
           onChange={handleChange}
         />
-        <br /><br />
 
         <input
-          type="password"
           name="confirmPassword"
-          placeholder="Confirm password"
+          type="password"
+          placeholder="Confirm Password"
           value={formData.confirmPassword}
           onChange={handleChange}
         />
-        <br /><br />
 
         <select name="role" value={formData.role} onChange={handleChange}>
           <option value="user">User</option>
           <option value="admin">Admin</option>
         </select>
-        <br /><br />
 
-        <button type="submit">Signup</button>
+        <button className="btn">Signup</button>
       </form>
     </div>
   );
