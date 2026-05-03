@@ -47,7 +47,7 @@ export const InventoryProvider = ({ children }) => {
       setInventory(formattedProducts);
     } catch (err) {
       if (err.name !== "AbortError") {
-        setError("Failed to fetch products");
+        setError("Failed to sync products");
       }
     } finally {
       setLoading(false);
@@ -67,23 +67,25 @@ export const InventoryProvider = ({ children }) => {
   };
 
   const removeProduct = (id) => {
-    setInventory((prev) => prev.filter((item) => item.id !== id));
+    setInventory((prev) => prev.filter((product) => product.id !== id));
   };
 
   const increaseStock = (id) => {
     setInventory((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, count: item.count + 1 } : item
+      prev.map((product) =>
+        product.id === id
+          ? { ...product, count: product.count + 1 }
+          : product
       )
     );
   };
 
   const decreaseStock = (id) => {
     setInventory((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, count: Math.max(0, item.count - 1) }
-          : item
+      prev.map((product) =>
+        product.id === id
+          ? { ...product, count: Math.max(0, product.count - 1) }
+          : product
       )
     );
   };

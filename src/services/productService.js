@@ -4,7 +4,7 @@ export const fetchProducts = async (signal) => {
   });
 
   if (!response.ok) {
-    throw new Error("Something went wrong");
+    throw new Error("Failed to fetch products");
   }
 
   return response.json();
