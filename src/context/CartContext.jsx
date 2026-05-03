@@ -16,9 +16,9 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product) => {
     setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
+      const existingProduct = prev.find((item) => item.id === product.id);
 
-      if (existing) {
+      if (existingProduct) {
         return prev.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
@@ -37,7 +37,9 @@ export const CartProvider = ({ children }) => {
   const increaseQuantity = (id) => {
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        item.id === id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
       )
     );
   };
@@ -46,19 +48,21 @@ export const CartProvider = ({ children }) => {
     setCartItems((prev) =>
       prev
         .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+          item.id === id
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
         )
         .filter((item) => item.quantity > 0)
     );
   };
 
   const totalQuantity = useMemo(() => {
-    return cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
   }, [cartItems]);
 
   const totalPrice = useMemo(() => {
     return cartItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
+      (total, item) => total + item.price * item.quantity,
       0
     );
   }, [cartItems]);

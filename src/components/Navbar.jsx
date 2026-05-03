@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 
 const Navbar = () => {
   const { isLoggedIn, logout, currentUser, role } = useAuth();
+  const { totalQuantity } = useCart();
 
   return (
     <nav style={{ padding: "20px", background: "#333", color: "#fff" }}>
@@ -12,7 +14,7 @@ const Navbar = () => {
 
       {isLoggedIn && (
         <Link to="/cart" style={{ marginRight: "10px", color: "#fff" }}>
-          Cart
+          Cart ({totalQuantity})
         </Link>
       )}
 

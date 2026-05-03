@@ -1,7 +1,9 @@
 import { useInventory } from "../context/InventoryContext";
+import { useCart } from "../context/CartContext";
 
 const Products = () => {
   const { inventory, loading, error, syncInventory } = useInventory();
+  const { addToCart } = useCart();
 
   return (
     <div style={{ padding: "30px" }}>
@@ -44,7 +46,9 @@ const Products = () => {
               {product.count === 0 ? (
                 <button disabled>Out of Stock</button>
               ) : (
-                <button>Add to Cart</button>
+                <button onClick={() => addToCart(product)}>
+                  Add to Cart
+                </button>
               )}
             </div>
           ))}
