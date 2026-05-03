@@ -7,41 +7,59 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (savedUser) setCurrentUser(savedUser);
+    if (savedUser) {
+      setCurrentUser(savedUser);
+    }
   }, []);
 
   const signup = ({ username, password, role }) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const existingUser = users.find((user) => user.username === username);
+    const duplicateUser = users.find((user) => user.username === username);
 
-    if (existingUser) {
-      return { success: false, message: "Username already exists" };
+    if (duplicateUser) {
+      return {
+        success: false,
+        message: "Username already exists",
+      };
     }
 
-    const newUser = { username, password, role };
-    users.push(newUser);
+    const newUser = {
+      username,
+      password,
+      role,
+    };
 
+    users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
 
-    return { success: true, message: "Signup successful" };
+    return {
+      success: true,
+      message: "Signup successful",
+    };
   };
 
   const login = ({ username, password }) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
     const user = users.find(
-      (u) => u.username === username && u.password === password
+      (item) => item.username === username && item.password === password
     );
 
     if (!user) {
-      return { success: false, message: "Invalid username or password" };
+      return {
+        success: false,
+        message: "Invalid username or password",
+      };
     }
 
     setCurrentUser(user);
     localStorage.setItem("currentUser", JSON.stringify(user));
 
-    return { success: true, role: user.role };
+    return {
+      success: true,
+      role: user.role,
+    };
   };
 
   const logout = () => {
